@@ -5,26 +5,32 @@
 #ifndef TESTFIRSTPROGRAMMING_STACK_H
 #define TESTFIRSTPROGRAMMING_STACK_H
 #include "catch.hpp"
+#include <assert.h>
 #define CATCH_CONFIG_MAIN
 class Stack
  {
+    bool bisEmpty = true;
 public:
-    bool isEmpty() const {return true;}
-    void Push(int);
+    bool isEmpty() const {
+        return bisEmpty;}
+    void Push(int Element)
+    {
+        bisEmpty = false;
+    };
  };
 class TestStack
 {
+    Stack MyStack;
 public:
-
     void CreateEmptyStack()
     {
         Stack MyStack;
-        MyStack.isEmpty();
+        assert(MyStack.isEmpty()==true);
     }
     void Push(int)
     {
-        Stack MyStack;
-        MyStack.Push(1);
+        MyStack.Push(0);
+        assert(MyStack.isEmpty()==false);
     }
 };
 #endif //TESTFIRSTPROGRAMMING_STACK_H
