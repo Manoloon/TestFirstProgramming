@@ -10,13 +10,22 @@
 class Stack
  {
     bool bisEmpty = true;
+    int values=0;
 public:
     bool isEmpty() const {
         return bisEmpty;}
     void Push(int Element)
     {
+        values++;
         bisEmpty = false;
     };
+    void Pop()
+    {
+        if(!isEmpty())
+        {
+            values--;
+        }
+    }
  };
 class TestStack
 {
@@ -25,12 +34,17 @@ public:
     void CreateEmptyStack()
     {
         Stack MyStack;
-        assert(MyStack.isEmpty()==true);
+        REQUIRE(MyStack.isEmpty());
     }
     void Push(int)
     {
         MyStack.Push(0);
-        assert(MyStack.isEmpty()==false);
+        REQUIRE(!MyStack.isEmpty());
+    }
+    void Pop()
+    {
+        MyStack.Pop();
+        REQUIRE(MyStack.isEmpty());
     }
 };
 #endif //TESTFIRSTPROGRAMMING_STACK_H
