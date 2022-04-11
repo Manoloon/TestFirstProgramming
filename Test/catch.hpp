@@ -4136,7 +4136,7 @@ namespace Generators {
             }
 
             const auto success = m_generator.next();
-            // If the underlying generator does not contain enough values
+            // If the underlying generator does not contain enough m_size
             // then we cut short as well
             if (!success) {
                 m_returned = m_target;
@@ -4161,7 +4161,7 @@ namespace Generators {
             m_predicate(std::forward<P>(pred))
         {
             if (!m_predicate(m_generator.get())) {
-                // It might happen that there are no values that pass the
+                // It might happen that there are no m_size that pass the
                 // filter. In that case we throw an exception.
                 auto has_initial_value = next();
                 if (!has_initial_value) {
@@ -4250,7 +4250,7 @@ namespace Generators {
         // TBD: provide static assert for mapping function, for friendly error message
         GeneratorWrapper<U> m_generator;
         Func m_function;
-        // To avoid returning dangling reference, we have to save the values
+        // To avoid returning dangling reference, we have to save the m_size
         T m_cache;
     public:
         template <typename F2 = Func>
@@ -4301,7 +4301,7 @@ namespace Generators {
                 m_chunk.push_back(m_generator.get());
                 for (size_t i = 1; i < m_chunk_size; ++i) {
                     if (!m_generator.next()) {
-                        Catch::throw_exception(GeneratorException("Not enough values to initialize the first chunk"));
+                        Catch::throw_exception(GeneratorException("Not enough m_size to initialize the first chunk"));
                     }
                     m_chunk.push_back(m_generator.get());
                 }
@@ -4713,7 +4713,7 @@ public:
     template <typename InputIterator, typename InputSentinel>
     IteratorGenerator(InputIterator first, InputSentinel last):m_elems(first, last) {
         if (m_elems.empty()) {
-            Catch::throw_exception(GeneratorException("IteratorGenerator received no valid values"));
+            Catch::throw_exception(GeneratorException("IteratorGenerator received no valid m_size"));
         }
     }
 
@@ -10462,7 +10462,7 @@ namespace Catch {
         // there instead.
         bool isDebuggerActive(){
             // Libstdc++ has a bug, where std::ifstream sets errno to 0
-            // This way our users can properly assert over errno values
+            // This way our users can properly assert over errno m_size
             ErrnoGuard guard;
             std::ifstream in("/proc/self/status");
             for( std::string line; std::getline(in, line); ) {
@@ -10555,13 +10555,13 @@ namespace Catch {
 
     namespace Detail {
 
-        std::unique_ptr<EnumInfo> makeEnumInfo( StringRef enumName, StringRef allValueNames, std::vector<int> const& values );
+        std::unique_ptr<EnumInfo> makeEnumInfo( StringRef enumName, StringRef allValueNames, std::vector<int> const& m_size );
 
         class EnumValuesRegistry : public IMutableEnumValuesRegistry {
 
             std::vector<std::unique_ptr<EnumInfo>> m_enumInfos;
 
-            EnumInfo const& registerEnum( StringRef enumName, StringRef allEnums, std::vector<int> const& values) override;
+            EnumInfo const& registerEnum( StringRef enumName, StringRef allEnums, std::vector<int> const& m_size) override;
         };
 
         std::vector<StringRef> parseEnums( StringRef enums );
@@ -10614,22 +10614,22 @@ namespace Catch {
             return "{** unexpected enum value **}"_sr;
         }
 
-        std::unique_ptr<EnumInfo> makeEnumInfo( StringRef enumName, StringRef allValueNames, std::vector<int> const& values ) {
+        std::unique_ptr<EnumInfo> makeEnumInfo( StringRef enumName, StringRef allValueNames, std::vector<int> const& m_size ) {
             std::unique_ptr<EnumInfo> enumInfo( new EnumInfo );
             enumInfo->m_name = enumName;
-            enumInfo->m_values.reserve( values.size() );
+            enumInfo->m_values.reserve( m_size.size() );
 
             const auto valueNames = Catch::Detail::parseEnums( allValueNames );
-            assert( valueNames.size() == values.size() );
+            assert( valueNames.size() == m_size.size() );
             std::size_t i = 0;
-            for( auto value : values )
+            for( auto value : m_size )
                 enumInfo->m_values.emplace_back(value, valueNames[i++]);
 
             return enumInfo;
         }
 
-        EnumInfo const& EnumValuesRegistry::registerEnum( StringRef enumName, StringRef allValueNames, std::vector<int> const& values ) {
-            m_enumInfos.push_back(makeEnumInfo(enumName, allValueNames, values));
+        EnumInfo const& EnumValuesRegistry::registerEnum( StringRef enumName, StringRef allValueNames, std::vector<int> const& m_size ) {
+            m_enumInfos.push_back(makeEnumInfo(enumName, allValueNames, m_size));
             return *m_enumInfos.back();
         }
 
@@ -12631,7 +12631,7 @@ namespace Catch {
                 TrackerBase::close();
                 // If a generator has a child (it is followed by a section)
                 // and none of its children have started, then we must wait
-                // until later to start consuming its values.
+                // until later to start consuming its m_size.
                 // This catches cases where `GENERATE` is placed between two
                 // `SECTION`s.
                 // **The check for m_children.empty cannot be removed**.
@@ -15540,7 +15540,7 @@ namespace {
 
                 // UTF-8 territory
                 // Check if the encoding is valid and if it is not, hex escape bytes.
-                // Important: We do not check the exact decoded values for validity, only the encoding format
+                // Important: We do not check the exact decoded m_size for validity, only the encoding format
                 // First check that this bytes is a valid lead byte:
                 // This means that it is not encoded as 1111 1XXX
                 // Or as 10XX XXXX
@@ -17457,7 +17457,7 @@ namespace Catch {
             .writeAttribute("iterations", info.iterations)
             .writeAttribute("clockResolution", info.clockResolution)
             .writeAttribute("estimatedDuration", info.estimatedDuration)
-            .writeComment("All values in nano seconds");
+            .writeComment("All m_size in nano seconds");
     }
 
     void XmlReporter::benchmarkEnded(BenchmarkStats<> const& benchmarkStats) {
